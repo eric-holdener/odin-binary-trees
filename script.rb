@@ -106,15 +106,26 @@ class Tree
   # accepts a node and returns its height
   # height is defined as the number of edges in longest path from a given node to a leaf node.
   def height(node)
-    return 0 if node.data.nil? == true
+    return 0 if node.nil? == true
 
-    1 + max(height(node.left_child),
-            height(node.right_child))
+    1 + [height(node.left_child), height(node.right_child)].max
   end
 
   # accepts a node and returns its depth
   # depth is defined as the number of edges in path from a given node to the tree's root node
   def depth(node)
+    depth = 0
+    root = @root
+    while node != root
+      if node.data < root.data
+        root = root.left_child
+        depth += 1
+      else
+        root = root.right_child
+        depth += 1
+      end
+    end
+    depth
   end
 
   # checks if tree is balanced
@@ -148,12 +159,14 @@ tree = Tree.new(arr)
 
 proc = Proc.new { |value| puts value.data }
 
-tree.level_order(proc)
 tree.insert(2)
-tree.level_order(proc)
+# tree.level_order(proc)
 # tree.preorder(proc)
 # tree.postorder(proc)
 # tree.rebalance
 
-value = tree.find(1)
-p tree.height(value)
+node = tree.find(1)
+p tree.height(node)
+
+node2 = tree.find(3)
+p tree.depth(node2)
