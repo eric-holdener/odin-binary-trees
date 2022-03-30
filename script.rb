@@ -88,9 +88,14 @@ class Tree
     proc.call(root.data)
   end
 
+  # accepts a node and returns its height
+  # height is defined as the number of edges in longest path from a given node to a leaf node.
+  def height(node)
+  end
+
   # accepts a node and returns its depth
   # depth is defined as the number of edges in path from a given node to the tree's root node
-  def height(node)
+  def depth(node)
   end
 
   # checks if tree is balanced
@@ -102,6 +107,10 @@ class Tree
   # rebalances an unbalanced tree
   # traverses the tree to create an array, then passes array to build_tree
   def rebalance
+    array = []
+    proc = Proc.new { |value| array.push(value) }
+    level_order(proc, @root)
+    @root = build_tree(array.sort)
   end
 end
 
@@ -117,11 +126,10 @@ end
 
 arr = [1, 3, 5, 6, 1, 7]
 tree = Tree.new(arr)
-p tree.find(6)
 
 proc = Proc.new { |value| puts value }
 
 # tree.inorder(proc)
 # tree.preorder(proc)
 # tree.postorder(proc)
-tree.level_order(proc)
+tree.rebalance
