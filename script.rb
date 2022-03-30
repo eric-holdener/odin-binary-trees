@@ -39,8 +39,22 @@ class Tree
   end
 
   # accepts a value to delete in the tree
-  def delete(value, root = @root)
+  def delete(value, node = @root)
+    return node if node.nil?
 
+    if value < node.data
+      node.left_child = delete(value, node.left_child)
+    elsif value > node.data
+      node.right_child = delete(value, node.right_child)
+    else
+      return node.right_child if node.left_child.nil?
+      return node.left_child if node.right_child.nil?
+
+      leftmost_node = leftmost_leaf(node.right_child)
+      node.data = leftmost_node.data
+      node.right_child = delete(leftmost_node.data, node.right_child)
+    end
+  node
   end
 
   # accepts a value, returns node with that value
@@ -163,6 +177,12 @@ class Tree
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
     pretty_print(node.left_child, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left_child
   end
+
+  def leftmost_lead(node)
+    node = node.left_child until node.left_child.nil?
+
+    node
+  end
 end
 
 class Node
@@ -203,6 +223,8 @@ def driver
   tree.insert(200)
   tree.insert(150)
   tree.insert(250)
+
+  tree.pretty_print
 
   # confirm the tree is unbalanced by calling balanced?
   p "Balanced = #{tree.balanced?}"
