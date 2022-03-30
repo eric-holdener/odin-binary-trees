@@ -39,7 +39,8 @@ class Tree
   end
 
   # accepts a value to delete in the tree
-  def delete(value)
+  def delete(value, root = @root)
+
   end
 
   # accepts a value, returns node with that value
@@ -139,7 +140,9 @@ class Tree
     l_height = height(root.left_child)
     r_height = height(root.right_child)
 
-    if abs(l_height - r_height) > 1
+    difference = l_height - r_height
+
+    if difference.abs > 1
       false
     else
       true
@@ -150,9 +153,15 @@ class Tree
   # traverses the tree to create an array, then passes array to build_tree
   def rebalance
     array = []
-    proc = Proc.new { |value| array.push(value) }
+    proc = Proc.new { |value| array.push(value.data) }
     level_order(proc, @root)
     @root = build_tree(array.sort)
+  end
+
+  def pretty_print(node = @root, prefix = '', is_left = true)
+    pretty_print(node.right_child, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right_child
+    puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
+    pretty_print(node.left_child, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left_child
   end
 end
 
@@ -166,19 +175,55 @@ class Node
   end
 end
 
-arr = [1, 3, 5, 6, 1, 7]
-tree = Tree.new(arr)
 
-proc = Proc.new { |value| puts value.data }
 
-# tree.insert(2)
-# tree.level_order(proc)
-# tree.preorder(proc)
-# tree.postorder(proc)
-# tree.rebalance
+def driver
+  # create a binary search tree from an array of random numbers
+  arr = (Array.new(15) { rand(1..100) })
+  tree = Tree.new(arr)
 
-node = tree.find(1)
-p tree.height(node)
+  # confirm tree is balanced
+  p "Balanced = #{tree.balanced?}"
 
-node2 = tree.find(3)
-p tree.depth(node2)
+  # print out all elements in level, pre, post, and in order
+  proc = Proc.new { |value| puts value.data }
+  puts 'Level order'
+  tree.level_order(proc)
+  puts 'Preorder'
+  tree.preorder(proc)
+  puts 'Postorder'
+  tree.postorder(proc)
+  puts 'Inorder'
+  tree.inorder(proc)
+
+  tree.pretty_print
+
+  # unbalance the tree by adding several numbers > 100
+  tree.insert(115)
+  tree.insert(200)
+  tree.insert(150)
+  tree.insert(250)
+
+  # confirm the tree is unbalanced by calling balanced?
+  p "Balanced = #{tree.balanced?}"
+
+  # balance the tree by calling rebalance
+  tree.rebalance
+
+  # confirm tree is balanced
+  p "Balanced = #{tree.balanced?}"
+
+  # print out all elements in level, pre, post, and in order
+  puts 'Level order'
+  tree.level_order(proc)
+  puts 'Preorder'
+  tree.preorder(proc)
+  puts 'Postorder'
+  tree.postorder(proc)
+  puts 'Inorder'
+  tree.inorder(proc)
+
+  tree.pretty_print
+end
+
+driver
