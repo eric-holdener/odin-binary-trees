@@ -64,7 +64,7 @@ class Tree
     queue.push(root)
     while queue.empty? == false
       data = queue[0]
-      proc.call(data.data)
+      proc.call(data)
       if data.left_child.nil? == false
         queue.push(data.left_child)
       end
@@ -81,7 +81,7 @@ class Tree
     return if root.nil?
 
     inorder(proc, root.left_child)
-    proc.call(root.data)
+    proc.call(root)
     inorder(proc, root.right_child)
   end
 
@@ -89,7 +89,7 @@ class Tree
   def preorder(proc, root = @root)
     return if root.nil?
 
-    proc.call(root.data)
+    proc.call(root)
     preorder(proc, root.left_child)
     preorder(proc, root.right_child)
   end
@@ -100,12 +100,16 @@ class Tree
 
     postorder(proc, root.left_child)
     postorder(proc, root.right_child)
-    proc.call(root.data)
+    proc.call(root)
   end
 
   # accepts a node and returns its height
   # height is defined as the number of edges in longest path from a given node to a leaf node.
   def height(node)
+    return 0 if node.data.nil? == true
+
+    1 + max(height(node.left_child),
+            height(node.right_child))
   end
 
   # accepts a node and returns its depth
@@ -142,7 +146,7 @@ end
 arr = [1, 3, 5, 6, 1, 7]
 tree = Tree.new(arr)
 
-proc = Proc.new { |value| puts value }
+proc = Proc.new { |value| puts value.data }
 
 tree.level_order(proc)
 tree.insert(2)
@@ -150,3 +154,6 @@ tree.level_order(proc)
 # tree.preorder(proc)
 # tree.postorder(proc)
 # tree.rebalance
+
+value = tree.find(1)
+p tree.height(value)
