@@ -132,6 +132,15 @@ class Tree
   # a balanced tree is defined as one where the difference between heights of the
   # left subtree and right subtree of every node is not more than 1
   def balanced?
+    root = @root
+    l_height = height(root.left_child)
+    r_height = height(root.right_child)
+
+    if abs(l_height - r_height) > 1
+      false
+    else
+      true
+    end
   end
 
   # rebalances an unbalanced tree
