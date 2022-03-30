@@ -42,19 +42,28 @@ class Tree
 
   # accepts a block
   # traverse the tree in breadth first level order and yield each node to the block
-  def level_order(&block)
+  def level_order
   end
 
   # traverse tree in depth first inorder order and yields each node to the block
-  def inorder(&block)
+  def inorder(root = @root)
+    indorer(root.left_child)
+    yield root.data
+    indorer(root.right_child)
   end
 
   # traverse tree in depth first preorder order and yields each node to the block
-  def preorder(&block)
+  def preorder(root = @root)
+    yield root.data
+    preorder(root.left_child)
+    preorder(root.right_child)
   end
 
   # traverse tree in depth first postorder order and yields each node to the block
-  def postorder(&block)
+  def postorder(root = @root)
+    postorder(root.left_child)
+    postorder(root.right_child)
+    yield root.data
   end
 
   # accepts a node and returns its depth
