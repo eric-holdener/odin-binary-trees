@@ -46,24 +46,30 @@ class Tree
   end
 
   # traverse tree in depth first inorder order and yields each node to the block
-  def inorder(root = @root)
-    indorer(root.left_child)
-    yield root.data
-    indorer(root.right_child)
+  def inorder(proc, root = @root)
+    return if root.nil?
+
+    inorder(proc, root.left_child)
+    proc.call(root.data)
+    inorder(proc, root.right_child)
   end
 
   # traverse tree in depth first preorder order and yields each node to the block
-  def preorder(root = @root)
-    yield root.data
-    preorder(root.left_child)
-    preorder(root.right_child)
+  def preorder(proc, root = @root)
+    return if root.nil?
+
+    proc.call(root.data)
+    preorder(proc, root.left_child)
+    preorder(proc, root.right_child)
   end
 
   # traverse tree in depth first postorder order and yields each node to the block
-  def postorder(root = @root)
-    postorder(root.left_child)
-    postorder(root.right_child)
-    yield root.data
+  def postorder(proc, root = @root)
+    return if root.nil?
+
+    postorder(proc, root.left_child)
+    postorder(proc, root.right_child)
+    proc.call(root.data)
   end
 
   # accepts a node and returns its depth
@@ -72,7 +78,7 @@ class Tree
   end
 
   # checks if tree is balanced
-  # a balanced tree is defined as one where the difference between heights of the 
+  # a balanced tree is defined as one where the difference between heights of the
   # left subtree and right subtree of every node is not more than 1
   def balanced?
   end
@@ -96,3 +102,9 @@ end
 arr = [1, 3, 5, 6, 1, 7]
 tree = Tree.new(arr)
 p tree.find(6)
+
+proc = Proc.new { |value| puts value }
+
+tree.inorder(proc)
+tree.preorder(proc)
+tree.postorder(proc)
