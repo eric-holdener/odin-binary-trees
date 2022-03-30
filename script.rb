@@ -20,7 +20,22 @@ class Tree
   end
 
   # accepts a value to insert in the tree
-  def insert(value)
+  def insert(value, root = @root)
+    if value == root.data
+      puts "That value already exists in the tree"
+    elsif value < root.data
+      if root.left_child.nil? == false
+        insert(value, root.left_child)
+      else
+        root.left_child = Node.new(value)
+      end
+    else
+      if root.right_child.nil? == false
+        insert(value, root.right_child)
+      else
+        root.right_child = Node.new(value)
+      end
+    end
   end
 
   # accepts a value to delete in the tree
@@ -129,7 +144,9 @@ tree = Tree.new(arr)
 
 proc = Proc.new { |value| puts value }
 
-# tree.inorder(proc)
+tree.level_order(proc)
+tree.insert(2)
+tree.level_order(proc)
 # tree.preorder(proc)
 # tree.postorder(proc)
-tree.rebalance
+# tree.rebalance
