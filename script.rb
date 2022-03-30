@@ -106,9 +106,12 @@ class Tree
   # accepts a node and returns its height
   # height is defined as the number of edges in longest path from a given node to a leaf node.
   def height(node)
-    return 0 if node.nil? == true
+    return -1 if node.nil? == true
 
-    1 + [height(node.left_child), height(node.right_child)].max
+    l_height = height(node.left_child)
+    r_height = height(node.right_child)
+
+    [l_height, r_height].max + 1
   end
 
   # accepts a node and returns its depth
@@ -168,7 +171,7 @@ tree = Tree.new(arr)
 
 proc = Proc.new { |value| puts value.data }
 
-tree.insert(2)
+# tree.insert(2)
 # tree.level_order(proc)
 # tree.preorder(proc)
 # tree.postorder(proc)
