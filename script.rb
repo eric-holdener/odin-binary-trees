@@ -42,7 +42,23 @@ class Tree
 
   # accepts a block
   # traverse the tree in breadth first level order and yield each node to the block
-  def level_order
+  def level_order(proc, root = @root)
+    return if root.nil?
+
+    queue = []
+    queue.push(root)
+    while queue.empty? == false
+      data = queue[0]
+      proc.call(data.data)
+      if data.left_child.nil? == false
+        queue.push(data.left_child)
+      end
+      if data.right_child.nil? == false
+        queue.push(data.right_child)
+      end
+      queue.shift
+      queue
+    end
   end
 
   # traverse tree in depth first inorder order and yields each node to the block
@@ -105,6 +121,7 @@ p tree.find(6)
 
 proc = Proc.new { |value| puts value }
 
-tree.inorder(proc)
-tree.preorder(proc)
-tree.postorder(proc)
+# tree.inorder(proc)
+# tree.preorder(proc)
+# tree.postorder(proc)
+tree.level_order(proc)
